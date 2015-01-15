@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-43231 -->
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+
+    <script>
+        window.plugins.orientationLock.lock("portrait")
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+</head>
+<body>
+<a href="#" class="btn btn-default" id="openBtn">Open modal</a>
+
+<div id="modal-content" class="modal fade" tabindex="-1" role="dialog">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <fieldset>
+
+                        <div class="form-group">
+                            <p>Hoelang denk je dat de gemiddelde tijd was om deze rally te voltooien?</p>
+                            <label class="col-md-4 control-label" for="textinput">Schiftingsvraag</label>
+                            <div class="col-md-4">
+                                <input id="vraaginput" name="vraaginput" type="text" placeholder="UU-MM-SS" class="form-control input-md" required="">
+
+                            </div>
+                        </div>
+
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <a href="testdb.html" onclick="" class="btn btn-primary">Volgende</a>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/modal.js"></script>
+</body>
+</html>

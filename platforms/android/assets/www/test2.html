@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-43231 -->
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+</head>
+<body>
+
+<table class="table table-bordered">
+    <thead>
+    <tr><th>Antwoorden</th></tr>
+    </thead>
+    <tbody>
+    <tr><td id="test1"></td></tr>
+    <tr><td id="test2"></td></tr>
+    <tr><td id="test3"></td></tr>
+    <tr><td id="test4"></td></tr>
+    <tr><td id="test5"></td></tr>
+    <tr><td id="test6"></td></tr>
+    <tr><td id="test7"></td></tr>
+    <tr><td id="test8"></td></tr>
+    <tr><td id="test9"></td></tr>
+    <tr><td id="test10"></td></tr>
+    </tbody>
+</table>
+
+
+<!--<div id="test1"></div>-->
+<!--<div id="test2"></div>
+<div id="test3"></div>
+<div id="test4"></div>
+<div id="test5"></div>
+<div id="test6"></div>
+<div id="test7"></div>
+<div id="test8"></div>
+<div id="test9"></div>
+<div id="test10"></div>-->
+
+<script>
+    document.getElementById('test1').innerHTML = localStorage.getItem("Antwoord1");
+    document.getElementById('test2').innerHTML = localStorage.getItem("Antwoord2");
+    document.getElementById('test3').innerHTML = localStorage.getItem("Antwoord3");
+    document.getElementById('test4').innerHTML = localStorage.getItem("Antwoord4");
+    document.getElementById('test5').innerHTML = localStorage.getItem("Antwoord5");
+    document.getElementById('test6').innerHTML = localStorage.getItem("Antwoord6");
+    document.getElementById('test7').innerHTML = localStorage.getItem("Antwoord7");
+    document.getElementById('test8').innerHTML = localStorage.getItem("Antwoord8");
+    document.getElementById('test9').innerHTML = localStorage.getItem("Antwoord9");
+    document.getElementById('test10').innerHTML = localStorage.getItem("Antwoord10");
+
+
+</script>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</body>
+
+
+</html>
