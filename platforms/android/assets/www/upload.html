@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-43231 -->
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+
+    <script>
+        window.plugins.orientationLock.lock("portrait")
+    </script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+</head>
+<body>
+<a href="#" class="btn btn-default" id="openBtn">Open modal</a>
+
+<div id="modal-content" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <form class="form-horizontal">
+                    <fieldset>
+
+                        <!-- Text input-->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="groupname">Groepsnaam</label>
+                            <div class="col-md-4">
+                                <input id="groupname" name="textinput" type="text" placeholder="" class="form-control input-md" required="">
+
+                            </div>
+                        </div>
+
+                        <!-- Multiple Radios -->
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="radios">Groepstype</label>
+                            <div class="col-md-4">
+                                <div class="radio">
+                                    <label for="radios-0">
+                                        <input type="radio" name="radios" id="radios-0" value="Individueel">
+                                        Individueel
+                                    </label>
+                                </div>
+                                <div class="radio">
+                                    <label for="radios-1">
+                                        <input type="radio" name="radios" id="radios-1" value="Groep">
+                                        Groep
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="col-md-4 control-label" for="foo">Leuke foto delen?</label>
+                            <div class="col-md-8">
+                                <input id="foo" type="checkbox" value="1">
+                                <div style="display:none;" id="checked-a">
+                                    <button type="button" class="btn btn-info" onclick="getPhoto(pictureSource.PHOTOLIBRARY);">Kies Foto</button><br>
+                                    <img style="display:none;width: 200px;height: 200px" id="largeImage" src="" />
+                                    <br>
+                                    <div class="alert alert-info" role="alert">
+                                        <p>Ik ga akkoord met de wet op de privacy, dat mijn foto gebruikt kan worden op openbare plaatsen en voor commerciële doeleinden.</p>
+                                    </div>
+                                </div>
+                                <input type="hidden" id="hdn1" value="yes" />
+                            </div>
+                        </div>
+
+                        <!--<input type="checkbox" id="foo" value="1"/>-->
+                    </fieldset>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <!--<input id="urlText">-->
+                <input id="sendData" type="button" class="btn btn-success" value="Antwoorden Indienen">
+                <!--<a href="index.html" onclick="" class="btn btn-success">Antwoorden Indienen</a>-->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Dit is de code voor het verbergen van de 'leuke foto delen?' -->
+<script>
+    $("#foo").change(function(){
+
+        var ischecked=$(this).is(':checked');
+        if(ischecked)
+        {
+            $("#checked-a").fadeIn(200);
+        }
+        else
+        {
+            $("#checked-a").fadeOut(200);
+        }
+
+    });
+
+
+    $(function(){
+
+        var ischecked=$("#foo").is(':checked');
+        if(ischecked)
+        {
+            $("#checked-a").fadeIn(200);
+        }
+        else
+        {
+            $("#checked-a").fadeOut(200);
+        }
+
+    });
+</script>
+<!-- Dit is de code voor het ophalen van de foto uit de gsm storage. -->
+<script type="text/javascript" charset="utf-8">
+
+    var pictureSource;   // picture source
+    var destinationType; // sets the format of returned value
+
+    // Wait for device API libraries to load
+    //
+    document.addEventListener("deviceready",onDeviceReady,false);
+
+    // device APIs are available
+    //
+    function onDeviceReady() {
+        pictureSource=navigator.camera.PictureSourceType;
+        destinationType=navigator.camera.DestinationType;
+    }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoDataSuccess(imageData) {
+        // Uncomment to view the base64-encoded image data
+        // console.log(imageData);
+
+        // Get image handle
+        //
+        var smallImage = document.getElementById('smallImage');
+
+        // Unhide image elements
+        //
+        smallImage.style.display = 'block';
+
+        // Show the captured photo
+        // The in-line CSS rules are used to resize the image
+        //
+        smallImage.src = "data:image/jpeg;base64," + imageData;
+    }
+
+    // Called when a photo is successfully retrieved
+    //
+    function onPhotoURISuccess(imageURI) {
+        // Uncomment to view the image file URI
+        // console.log(imageURI);
+
+        // Get image handle
+        //
+        var largeImage = document.getElementById('largeImage');
+
+        // Unhide image elements
+        //
+        largeImage.style.display = 'block';
+
+        // Show the captured photo
+        // The in-line CSS rules are used to resize the image
+        //
+        largeImage.src = imageURI;
+    }
+
+    // A button will call this function
+    //
+    function capturePhoto() {
+        // Take picture using device camera and retrieve image as base64-encoded string
+        navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 50,
+            destinationType: destinationType.DATA_URL });
+    }
+
+    // A button will call this function
+    //
+    function capturePhotoEdit() {
+        // Take picture using device camera, allow edit, and retrieve image as base64-encoded string
+        navigator.camera.getPicture(onPhotoDataSuccess, onFail, { quality: 20, allowEdit: true,
+            destinationType: destinationType.DATA_URL });
+    }
+
+    // A button will call this function
+    //
+    function getPhoto(source) {
+        // Retrieve image file location from specified source
+        navigator.camera.getPicture(onPhotoURISuccess, onFail, { quality: 50,
+            destinationType: destinationType.FILE_URI,
+            sourceType: source });
+    }
+
+    // Called if something bad happens.
+    //
+    function onFail(message) {
+        alert('Failed because: ' + message);
+    }
+
+</script>
+
+<!-- Dit is de code voor het versturen van de foto naar de database (couchdb). -->
+<script>
+
+
+    $('#sendData').click(function(){
+
+        var radios = document.getElementsByName('radios');
+        console.log(radios);
+
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                // do whatever you want with the checked radio
+                var checked = radios[i].value;
+                console.log(checked);
+
+                // only one radio can be logically checked, don't check the rest
+                break;
+            }
+        }
+
+        var random = Math.random();
+        var imgData;
+        var name = document.getElementById('groupname').value;
+        var imgElem = document.getElementById('largeImage');
+        if (imgElem==null){
+            imgData = JSON.stringify({imgData:null,doctype:"group",groupname:name,grouptype:checked});
+        }
+        else{
+            imgData = JSON.stringify({imgData:getBase64Image(imgElem),doctype:"group",groupname:name,grouptype:checked});
+        }
+//doctype=group       groupname=var name       grouptype=individual/group       score=thijs zijn score.
+
+            $.ajax({
+
+                url: 'http://richard123:richard123@richard123.cloudant.com/test/' + random,
+                contentType: 'application/json',
+                crossDomain: true,
+                data: imgData,
+                type: 'PUT',
+                success: function(data) {
+                    console.log(data);
+                    window.location.href = "index.html";
+                },
+                error: function(data) {
+                    console.log(data);
+                }
+
+
+            });
+        });
+
+    <!-- --------------------------------------------- -->
+
+
+    //--------------------------------------------------------
+
+        function getBase64Image(imgElem) {
+// imgElem must be on the same server otherwise a cross-origin error will be thrown "SECURITY_ERR: DOM Exception 18"
+            var canvas = document.createElement("canvas");
+            canvas.width = Math.min(imgElem.naturalWidth, 640);
+            canvas.height = Math.min(imgElem.naturalHeight, 480);
+            var ctx = canvas.getContext("2d");
+            ctx.drawImage(imgElem, 0, 0, canvas.width, canvas.height);
+            var dataURL = canvas.toDataURL("image/png");
+            return dataURL.replace(/^data:image\/(png|jpg);base64,/, "");
+        }
+
+
+
+
+
+
+
+
+
+</script>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/modal.js"></script>
+</body>
+</html>

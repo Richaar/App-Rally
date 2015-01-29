@@ -15,7 +15,7 @@
 
 <a href="#" class="btn btn-default" id="openBtn">Open modal</a>
 
-<div id="modal-content" class="modal fade" tabindex="-1" role="dialog">
+<div id="modal-content" class="modal fade" tabindex="-1" role="dialog" data-backdrop="static" data-keyboard="false">
     <div class="modal-dialog">
         <div class="modal-content">
             <div class="modal-body">
@@ -23,14 +23,26 @@
                     <fieldset>
 
                         <!-- Form Name -->
+                        <!--  Hier komt de vraag uit de database terecht -->
                         <legend id="question"></legend>
+                        <img id="question_images" src="http://www.w3schools.com/htmL/html5.gif" alt="HTML5 Icon" style="width:150px;height:150px;float: right">
+
+
                         <!-- Text input-->
                         <div class="form-group">
                             <label class="col-md-4 control-label" for="solution"></label>
-                            <div class="col-md-5">
-                                <input id="solution" name="textinput" type="text" placeholder="Antwoord" class="form-control input-md" required=""><br>
-                                <input id="QRPresence" type="checkbox" name="QRPresence" class="custom" data-theme="c" />
-                                <label for="QRPresence">QR code niet aanwezig</label>
+
+                            <!-- Code wanneer de vraag een open vraag is : -->
+                            <div id="open" class="col-md-5">
+                                <input id="solution" name="textinput" type="text" placeholder="Antwoord" class="form-control input-sm" required="">
+                            </div>
+
+                            <!--Code wanneer de vraag een multiple choice vraag is : -->
+                            <div id="multipleChoice" class="col-md-5">
+                                <input id="multiple1" name="klik" type="radio" value="0">&nbsp;<label for="multiple1" id="radio1"></label><br>
+                                <input id="multiple2" name="klik" type="radio" value="1">&nbsp;<label for="multiple2" id="radio2"></label><br>
+                                <input id="multiple3" name="klik" type="radio" value="2">&nbsp;<label for="multiple3" id="radio3"></label><br>
+                                <input id="multiple4" name="klik" type="radio" value="3">&nbsp;<label for="multiple4" id="radio4"></label><br>
                             </div>
                         </div>
 
@@ -38,18 +50,15 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <div id="submit"><a href="index.html" onclick="StoreLocal()" class="btn btn-primary">ANTWOORD!</a></div>
+                <div id="button"><a onclick="storeLocal()" class="btn btn-primary">ANTWOORD!</a></div>
             </div>
         </div>
     </div>
 </div>
-
 
 <script type="text/javascript" src="cordova.js"></script>
 <script type="text/javascript" src="js/bootstrap.js"></script>
 <script type="text/javascript" src="js/modal.js"></script>
 <script type="text/javascript" src="js/scan.js"></script>
 </body>
-
-
 </html>

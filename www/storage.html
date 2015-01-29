@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="msapplication-tap-highlight" content="no" />
+    <!-- WARNING: for iOS 7, remove the width=device-width and height=device-height attributes. See https://issues.apache.org/jira/browse/CB-43231 -->
+    <!--<meta name="viewport" content="user-scalable=no, initial-scale=1, maximum-scale=1, minimum-scale=1, width=device-width, height=device-height, target-densitydpi=device-dpi" />-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="css/toastr.min.css">
+    <link rel="stylesheet" type="text/css" href="css/toastr.js.map">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+</head>
+<body>
+
+<table class="table table-bordered">
+    <thead>
+    <tr><th>Antwoorden</th></tr>
+    </thead>
+    <tbody>
+    <tr><td id="test1"></td></tr>
+    <tr><td id="test2"></td></tr>
+    <tr><td id="test3"></td></tr>
+    <tr><td id="test4"></td></tr>
+    <tr><td id="test5"></td></tr>
+    <tr><td id="test6"></td></tr>
+    <tr><td id="test7"></td></tr>
+    <tr><td id="test8"></td></tr>
+    <tr><td id="test9"></td></tr>
+    <tr><td id="test10"></td></tr>
+
+    <tr><td>StartHotzoneNR  </td><td id="start"></td></tr>
+    <tr><td>Progress  </td><td id="progress"></td></tr>
+    <tr><td>Init  </td><td id="init"></td></tr>
+    <tr><td>NumberOfHotzones  </td><td id="numberOfHotzones"></td></tr>
+    <tr><td>Lang  </td><td id="lang"></td></tr>
+    <tr><td>placedMarkers  </td><td id="placedMarkers"></td></tr>
+    <tr><td>Unanswerd questions  </td><td id="unQuestion"></td></tr>
+    </tbody>
+</table>
+
+
+<script>
+    document.getElementById('test1').innerHTML = localStorage.getItem("question1a");
+    document.getElementById('test2').innerHTML = localStorage.getItem("question2a");
+    document.getElementById('test3').innerHTML = localStorage.getItem("question3a");
+    document.getElementById('test4').innerHTML = localStorage.getItem("question4a");
+    document.getElementById('test5').innerHTML = localStorage.getItem("question5a");
+    document.getElementById('test6').innerHTML = localStorage.getItem("question6a");
+    document.getElementById('test7').innerHTML = localStorage.getItem("question7a");
+    document.getElementById('test8').innerHTML = localStorage.getItem("question8a");
+    document.getElementById('test9').innerHTML = localStorage.getItem("question9a");
+    document.getElementById('test10').innerHTML = localStorage.getItem("question10a");
+
+    document.getElementById('start').innerHTML = localStorage.getItem("start");
+    document.getElementById('progress').innerHTML = localStorage.getItem("progress");
+    document.getElementById('init').innerHTML = localStorage.getItem("init");
+    document.getElementById('numberOfHotzones').innerHTML = localStorage.getItem("numberOfHotzones");
+    document.getElementById('lang').innerHTML = localStorage.getItem("lang");
+    document.getElementById('placedMarkers').innerHTML = localStorage.getItem("printedMarkers");
+    document.getElementById('unQuestions').innerHTML = localStorage.getItem("questionsUnanswered");
+
+
+</script>
+
+<script>
+    function flush() {
+        localStorage.clear();
+        window.open("index.html");
+    }
+</script>
+
+<script>
+    function go() {
+        window.open("index.html");
+    }
+</script>
+
+<script>
+    function skip() {
+        localStorage.setItem("question1a", "hoera");
+        localStorage.setItem("question2a", 1);
+        localStorage.setItem("question3a", "tralalala");
+        localStorage.setItem("question4a", "snoepjes");
+        localStorage.setItem("question5a", 2);
+        localStorage.setItem("question6a", "Hagrid");
+        localStorage.setItem("question7a", 0);
+        localStorage.setItem("question8a", "koekjes");
+        localStorage.setItem("progress", 8);
+    }
+</script>
+
+<button type="button" class="btn btn-warning" id="linkButton" onclick="flush()">
+    <span class="fa fa-question" aria-hidden="true"></span> Clear
+</button>
+
+<button type="button" class="btn btn-primary" onclick="go()" value="Go To Index"></button>
+<button type="button" class="btn btn-default" onclick="skip()" value="Go naar progress 8"></button>
+
+<script type="text/javascript" src="cordova.js"></script>
+<script type="text/javascript" src="js/toastr.min.js"></script>
+<script type="text/javascript" src="js/app.js"></script>
+<script type="text/javascript" src="js/bootstrap.js"></script>
+<script type="text/javascript" src="js/index.js"></script>
+</body>
+</html>

@@ -4,6 +4,7 @@ var numberOfHotzones;
 var start;
 var progress = 0;
 var unprintedMarkervalues = [];
+var printedMarkers = [];
 
 //runtime variables
 var map;
@@ -16,61 +17,90 @@ google.maps.event.addDomListener(window, 'load', initialize);
 
 
 function initialize() {
+    console.log("Index initialization: Started");
 
-    // 1) Initializing localStorage items
-    try {
-        init = localStorage.getItem("init");
-        numberOfHotzones = localStorage.getItem("hotzones");
-        start = localStorage.getItem("start");
-        progress = localStorage.getItem("progress");
-        printedMarkers.push(localStorage.getItem("printedMarkers"));
-    }
-    catch(err) {
+    // 1) Initializing or recovering localStorage items
+    if(localStorage.getItem("init")==null){
+        console.log("init 1: Initializing");
 
         init = true;
         localStorage.setItem("init", init);
-
         progress=0;
         localStorage.setItem("progress",progress);
-
         localStorage.setItem("lang","nl");
+        localStorage.setItem("questionsMissing","");
+
+        /*Storage.prototype.setObj = function(key, obj) {
+            return this.setItem(key, JSON.stringify(obj))
+        }
+        Storage.prototype.getObj = function(key) {
+            return JSON.parse(this.getItem(key))
+        }*/
+
+
+    }else{
+        console.log("Initializationprocess (init 1,2,3): " + localStorage.getItem("init"));
+        console.log("index 1: LocalStorage recovery");
+
+        init = localStorage.getItem("init");
+        numberOfHotzones = localStorage.getItem("numberOfHotzones");
+        start = localStorage.getItem("start");
+        progress = localStorage.getItem("progress");
+        /*printedMarkers = localStorage.getObj("printedMarkers");
+        console.log(printedMarkers);
+        console.log(localStorage.getItem("printedMarkers"));*/
+        if(localStorage.getItem("gpsStart")=="start"){
+            gpsStart = "start";
+            codeGPS();
+        }
+
+        if(progress == numberOfHotzones){
+            document.getElementById("scanPagina").disabled = true;
+            //Toastr message: Gefeliciteerd, u hebt de APpRally uitgespeeld! U kan uw score op campus Meistraat vergelijken met andere groepen.
+        }
     }
-    //console.log(init);
 
     // 2) Create map
    createMap();
 
     // 3) Add startup hotzones or unlocked & new markers
-    if(init){
-        getHotzones();
+    if(init==true){
+        placeAllHotzones();
     }
    else{
-        //placing unlocked markers
-        var counter =0;
-        if(counter < printedMarkers.length){
+        //index 2: placing unlocked markers
+        /*console.log("index 2: placing unlocked markers");
+        console.log(printedMarkers);
+        var counter;
+        for(counter=0;counter < printedMarkers.length;counter++){
             unprintedMarkervalues = printedMarkers[counter];
             getIcon();
-        }
+        }*/
 
         if(progress > 0){
             //decreasing progress a sec to get the previous hotzone nr for it's hotspots
             progress--;
 
             //placing new Markers
-            getHotspots(determineNextHotzone());
+            placeHotspots(determineNextHotzone());
             progress++;
-            getNextHotzone();
+            placeNextHotzone();
 
-            //saving unlocked & new markers
-            localStorage.setItem("printedMarkers", printedMarkers);
+            //index 5: saving current markers
+            /*console.log("index 5: saving current markers");
+            localStorage.setObj("printedMarkers", printedMarkers);*/
+
+            console.log("index 6: Index loading: Completed");
         }
-
     }
+
+    console.log("Index initialization: Complete!")
 }
 
 
-//also used as a clearMap function
 function createMap() {
+    if(init == true){console.log("init 2 Mapcreation");} //also used as a clearMap function
+
     var mapOptions = {
         zoom: 15,
         center: new google.maps.LatLng(51.2161349, 4.410647400000016),
@@ -81,8 +111,8 @@ function createMap() {
 }
 
 
-function getHotzones(){
-
+function placeAllHotzones(){
+    console.log("init 3 Hotzones");
     $.ajax
     ({
         url: url + '/_design/allviews/_view/hotzones',
@@ -92,24 +122,25 @@ function getHotzones(){
         success: function(data)
         {
             numberOfHotzones = data.rows.length;
-            localStorage.setItem("hotzones", numberOfHotzones);
+            localStorage.setItem("numberOfHotzones", numberOfHotzones);
 
             var i;
             for (i=0; i < numberOfHotzones; i++){
                 unprintedMarkervalues =data.rows[i].value;
-                //console.log("sinterklaas", unprintedMarkervalues);
 
                 getIcon();
             }
         },
         error: function(xhr, textStatus, errorThrown){
-            //message: no internetconnection, please try again!
+            //Toastr message: no internetconnection, please try again!
         }
     });
 }
 
 
-function getHotspots(hotzone){
+function placeHotspots(hotzone){
+    console.log("index 3: placing new hotspots");
+
     $.ajax
     ({
         url: url + '/_design/allviews/_view/hotspotsperhotzone?key="' + hotzone + '"',
@@ -129,14 +160,25 @@ function getHotspots(hotzone){
             }
         },
         error: function(xhr, textStatus, errorThrown){
-            //message: no internetconnection, please try again!
+            //Toastr message: no internetconnection, please try again!
         }
     });
-    addMarker();
 }
 
 
-function getNextHotzone(){
+function determineNextHotzone(){
+    if((start + progress)<= numberOfHotzones){
+        return start + progress;
+    }
+    else{
+        return start + progress - numberOfHotzones;
+    }
+}
+
+
+function placeNextHotzone(){
+    console.log("index 4: placing next hotzone");
+
     $.ajax
     ({
 
@@ -150,25 +192,13 @@ function getNextHotzone(){
             var i;
             for (i=0; i < data.rows.length; i++){
                 unprintedMarkervalues =data.rows[i].value;
-                //console.log(unprintedMarkervalues);
-
                 getIcon();
             }
         },
         error: function(xhr, textStatus, errorThrown){
-            //message: no internetconnection, please try again!
+            //Toastr message: no internetconnection, please try again!
         }
     });
-}
-
-
-function determineNextHotzone(){
-    if((start + progress)<= numberOfHotzones){
-        return start + progress;
-    }
-    else{
-        return start + progress - numberOfHotzones;
-    }
 }
 
 
@@ -235,7 +265,6 @@ function addMarker() {
     google.maps.event.addListener(marker, 'click', function() {
 
         if(init){
-
             // hotzone info ophalen en klaarzetten om terug te adden op de map
             var hotzoneinfo = infowindow.getContent().substring(4);
             console.log(hotzoneinfo);
@@ -254,23 +283,33 @@ function addMarker() {
                     unprintedMarkervalues.latitude = data.rows[0].value.latitude;
                     unprintedMarkervalues.longitude = data.rows[0].value.longitude;
                     unprintedMarkervalues.dropanimation = false;
-                    // unprintedMarkervalues.icon bevat nog steeds de hotzone-markerurl
-                    // dus deze hoeft niet meer aangepast te worden
+                    unprintedMarkervalues.hotzoneid = "chosen starthotzone";
+                    unprintedMarkervalues.info = hotzoneinfo;
+                    // unprintedMarkervalues.icon bevat nog steeds de hotzone-markerurl, dus deze hoeft niet meer aangepast te worden
 
                     console.log(unprintedMarkervalues);
                     createMap();
                     addMarker();
-                    //map.setCenter(determineCenterAverage());              <--- NOG AAN TE VULLEN!
+
+                    //Ajusting mapcenter and zoom
+                    //var hotzonePosition = [unprintedMarkervalues.latitude, unprintedMarkervalues.longitude];
 
 
-                    //starthotzone has been selected!
+                    //saven starthotzone en spelsetup voltooien
+                    printedMarkers.push(unprintedMarkervalues);
+                    console.log("test1", JSON.stringify(printedMarkers));
+                    console.log("test2", JSON.parse(JSON.stringify(printedMarkers)));
+                    console.log("test3", JSON.parse(JSON.stringify(printedMarkers))[0].doctype);
+
+                    ///localStorage.setItem("printedMarkers", printedMarkers);
+                    //console.log(localStorage.getItem("printedMarkers"));
                     localStorage.setItem("start",(data.rows[0].value._id).substring(7));
                     localStorage.setItem("init", false);
 
-                    printedMarkers.push(unprintedMarkervalues);
+                    console.log("init: Game startup completed! Starthotzone " + hotzoneinfo)
                 },
                 error: function (exception) {
-                    //message: no internetconnection. please try again!
+                    //Toastr message: no internetconnection. please try again!
                 }
             })
         }
@@ -281,78 +320,61 @@ function addMarker() {
 }
 
 
-/*func determineCenterAverage(destinationmarker){
+function centerAverage(hotzonePosition){
+    if(gpsStart != "start") {
+        gpsStart = "startBrief";
+        codeGPS();
+    }
 
-}*/
+    var centerZoomPoint = new google.maps.LatLng(gpsMarkerPos.latitude + hotzonePosition[0]/ 2, gpsMarkerPos.longitude + hotzonePosition[1]/2);
+    if(gpsStart =="startBrief"){gpsStart = "stop"}
+    map.setCenter(centerZoomPoint);
+    //map.zoom();
 
-//------------------------------------------------------------------------------------
-
-/*function getLocation() {
- if (navigator.geolocation) {
- navigator.geolocation.getCurrentPosition(showPosition, showError);
- } else {
- x.innerHTML = "Geolocation is not supported by this browser.";
- }
- }
-
- function showPosition(position) {
- lat = position.coords.latitude;
- lon = position.coords.longitude;
- latlon = new google.maps.LatLng(lat, lon)
-
- var marker = new google.maps.Marker({position:latlon,map:map,title:"You are here!",icon:"../www/img/gps.png"});
- }
-
- function showError(error) {
- switch(error.code) {
- case error.PERMISSION_DENIED:
- x.innerHTML = "User denied the request for Geolocation."
- break;
- case error.POSITION_UNAVAILABLE:
- x.innerHTML = "Location information is unavailable."
- break;
- case error.TIMEOUT:
- x.innerHTML = "The request to get user location timed out."
- break;
- case error.UNKNOWN_ERROR:
- x.innerHTML = "An unknown error occurred."
- break;
- }
- }*/
+}
 
 
-//--------------------------------------------------------------------------------------------
+//--------------------------------------- GPS functions -------------------------------------------
 
 
 var gpsMarkerPos = null;
+var gpsStart = null;
 
-function autoUpdate() {
-    navigator.geolocation.getCurrentPosition(function(position) {
-        var newPoint = new google.maps.LatLng(position.coords.latitude,
-            position.coords.longitude);
-
-        if (gpsMarkerPos) {
-            // Marker already created - Move it
-            gpsMarkerPos.setPosition(newPoint);
-        }
-        else {
-            // Marker does not exist - Create it
-            gpsMarkerPos = new google.maps.Marker({
-                position: newPoint,
-                map: map,
-                icon:"../www/img/gps.png"
-            });
-        }
-
-    //Center the map on the new position
-    map.setCenter(newPoint);
-    });
-
-// Call the autoUpdate() function every 8 seconds
-    setTimeout(autoUpdate, 8000);
+function uiGPS() {
+    gpsStart = 'start';
+    localStorage.setItem("gpsStart",gpsStart);
+    codeGPS();
 }
 
-//----------------------------------------------------------------------
+function codeGPS() {
+    if(gpsStart == "start" || gpsStart == "startBrief"){
+        navigator.geolocation.getCurrentPosition(function(position) {
+            var newPoint = new google.maps.LatLng(position.coords.latitude,
+                position.coords.longitude);
+
+            if (gpsMarkerPos) {
+                // Marker already created - Move it
+                gpsMarkerPos.setPosition(newPoint);
+            }
+            else {
+                // Marker does not exist - Create it
+                gpsMarkerPos = new google.maps.Marker({
+                    position: newPoint,
+                    map: map,
+                    icon:"../www/img/gps.png"
+                });
+            }
+
+            //Center the map on the new position
+            //map.setCenter(newPoint);
+        });
+
+        // Call the autoUpdate() function every 8 seconds
+        setTimeout(codeGPS(), 8000);
+    }
+}
+
+//--------------------------------------- Application -------------------------------------------
 
 
 var app = {

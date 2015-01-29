@@ -19,10 +19,6 @@ html, body, #map_canvas {
     padding: 0px
 }
 
-input.button-add {
-    background-image: url(../img/Location.png);
-    background-repeat: no-repeat;
-}
 
 article,
 aside,
